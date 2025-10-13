@@ -8,11 +8,11 @@ int main() {
     printf("A = "); afficheBigBinary(A);
     printf("B = "); afficheBigBinary(B);
 
-    BigBinary S = Addition(A,B);
-    printf("A + B = "); afficheBigBinary(S);
+    BigBinary D = Soustraction(A,B);
+    printf("A - B = "); afficheBigBinary(D);
 
     libereBigBinary(&A);
     libereBigBinary(&B);
-    libereBigBinary(&S);
+    libereBigBinary(&D);
     return 0;
 }
