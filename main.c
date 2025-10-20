@@ -18,5 +18,6 @@ int main() {
     libereBigBinary(&B);
     libereBigBinary(&S);
     libereBigBinary(&D);
+
     return 0;
 }
