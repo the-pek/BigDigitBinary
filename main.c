@@ -14,9 +14,13 @@ int main() {
     BigBinary D = Soustraction(A,B);
     printf("A - B = "); afficheBigBinary(D);
 
+    printf("A == B ? %d\n", Egal(A,B));
+    printf("A < B ? %d\n", Inferieur(A,B));
+
     libereBigBinary(&A);
     libereBigBinary(&B);
     libereBigBinary(&S);
     libereBigBinary(&D);
+
     return 0;
 }

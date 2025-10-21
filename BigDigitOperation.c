@@ -1,4 +1,5 @@
 #include "BigDigit.c"
+#include <stdbool.h>
 
 //Addition
 BigBinary Addition(BigBinary A, BigBinary B) {
@@ -74,4 +75,27 @@ BigBinary Soustraction(BigBinary A, BigBinary B) {
     }
 
     return res;
+}
+
+//Comparaison
+bool Egal(BigBinary A, BigBinary B) {
+    if (A.Signe != B.Signe || A.Taille != B.Taille) return false;
+    for (int i = 0; i < A.Taille; i++) {
+        if (A.Tdigits[i] != B.Tdigits[i]) return false;
+    }
+    return true;
+}
+
+bool Inferieur(BigBinary A, BigBinary B) {
+    if (A.Signe < B.Signe) return true;
+    if (A.Signe > B.Signe) return false;
+
+    if (A.Taille < B.Taille) return true;
+    if (A.Taille > B.Taille) return false;
+
+    for (int i = 0; i < A.Taille; i++) {
+        if (A.Tdigits[i] < B.Tdigits[i]) return true;
+        if (A.Tdigits[i] > B.Tdigits[i]) return false;
+    }
+    return false; // égaux
 }
