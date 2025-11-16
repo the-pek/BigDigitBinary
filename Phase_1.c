@@ -1,5 +1,4 @@
-#include "BigDigit.c"
-#include <stdbool.h>
+#include "BigDigit.h"
 
 //Addition
 BigBinary Addition(BigBinary A, BigBinary B) {

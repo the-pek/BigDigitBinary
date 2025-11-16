@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Phase_1.c"
+#include "BigDigit.h"
 
 int main() {
     BigBinary A = creerBigBinaryDepuisChaine("1011");  // 11
@@ -17,10 +17,14 @@ int main() {
     printf("A == B ? %d\n", Egal(A,B));
     printf("A < B ? %d\n", Inferieur(A,B));
 
+    BigBinary P = multiplicationEgyptienne(A,B);
+    printf("A * B = "); afficheBigBinary(P);
+
     libereBigBinary(&A);
     libereBigBinary(&B);
     libereBigBinary(&S);
     libereBigBinary(&D);
+    libereBigBinary(&P);
 
     return 0;
 }
