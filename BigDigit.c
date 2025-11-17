@@ -72,3 +72,26 @@ BigBinary creerBigBinaryDepuisChaine(const char *chaine) {
     if (tousZeros) nb.Signe = 0;
     return nb;
 }
+
+BigBinary BigBinary_shiftRight(BigBinary a) {
+    if (a.length == 1) {
+        a.bits[0] = 0;
+        return a;
+    }
+
+    for (int i = 0; i < a.length - 1; i++) {
+        a.bits[i] = a.bits[i + 1];
+    }
+    a.length--;
+    return a;
+}
+
+BigBinary BigBinary_shiftLeft(BigBinary a) {
+    a.bits = realloc(a.bits, (a.length + 1) * sizeof(int));
+    for (int i = a.length; i > 0; i--) {
+        a.bits[i] = a.bits[i - 1];
+    }
+    a.bits[0] = 0;
+    a.length++;
+    return a;
+}
