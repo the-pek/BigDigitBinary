@@ -5,12 +5,10 @@
 #ifndef _ALGORITHME_BINAIRE_BIGDIGIT_H
 #define _ALGORITHME_BINAIRE_BIGDIGIT_H
 
-
-
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 #define BASE 2
 
@@ -40,5 +38,6 @@ bool isZero(const BigBinary *A);
 
 BigBinary multiplicationEgyptienne(BigBinary A, BigBinary B);
 BigBinary BigBinary_mod(BigBinary A, BigBinary B);
+BigBinary BigBinary_PGCD(BigBinary A, BigBinary B);
 
 #endif
