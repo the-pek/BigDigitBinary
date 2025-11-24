@@ -8,4 +8,5 @@ add_executable(_Algorithme_Binaire main.c
         BigDigit.c
         Phase_1.c
         Phase_2.c
+        Utilitaires.c
 )

@@ -1,8 +1,69 @@
 #include "BigDigit.h"
 
 BigBinary BigBinary_PGCD(BigBinary A, BigBinary B) {
+    // Cas simples : renvoyer copies profondes
+    if (isZero(&A)) return copieBigBinary(&B);
+    if (isZero(&B)) return copieBigBinary(&A);
 
+    int k = 0;
+
+    // 1) Extraire facteurs de 2 communs
+    while (isEven(&A) && isEven(&B)) {
+        BigBinary newA = shiftRight(&A, 1);
+        BigBinary newB = shiftRight(&B, 1);
+
+        libereBigBinary(&A);
+        libereBigBinary(&B);
+
+        A = newA;
+        B = newB;
+
+        k++;
+    }
+
+    // 2) Rendre A impair
+    while (isEven(&A)) {
+        BigBinary newA = shiftRight(&A, 1);
+        libereBigBinary(&A);
+        A = newA;
+    }
+
+    // 3) Boucle principale
+    while (!isZero(&B)) {
+        // rendre B impair
+        while (isEven(&B)) {
+            BigBinary newB = shiftRight(&B, 1);
+            libereBigBinary(&B);
+            B = newB;
+        }
+
+        // s'assurer que A <= B, sinon swap A <-> B (avec copies profondes et libérations)
+        if (!Inferieur(A, B)) {
+            BigBinary tmpA = copieBigBinary(&A);
+            BigBinary tmpB = copieBigBinary(&B);
+            libereBigBinary(&A);
+            libereBigBinary(&B);
+            A = tmpB;
+            B = tmpA;
+        }
+
+        // B = B - A  (B >= A ici)
+        BigBinary newB = Soustraction(B, A);
+        libereBigBinary(&B);
+        B = newB;
+    }
+
+    // 4) Remultiplier A par 2^k
+    while (k-- > 0) {
+        BigBinary newA = shiftLeft(&A, 1);
+        libereBigBinary(&A);
+        A = newA;
+    }
+
+    normalize(&A);
+    return A; // caller doit libérer la BigBinary retournée
 }
+
 
 BigBinary BigBinary_mod(BigBinary A, BigBinary B) {
     if (isZero(&B)) {

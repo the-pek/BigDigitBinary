@@ -35,6 +35,7 @@ BigBinary shiftRight(const BigBinary *A, int n);
 int bitDeDroite(const BigBinary *A);
 void normalize(BigBinary *A);
 bool isZero(const BigBinary *A);
+bool isEven(const BigBinary *X);
 
 BigBinary multiplicationEgyptienne(BigBinary A, BigBinary B);
 BigBinary BigBinary_mod(BigBinary A, BigBinary B);
