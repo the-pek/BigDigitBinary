@@ -42,14 +42,20 @@ void normalize(BigBinary *A) {
         A->Tdigits = newArr;
         A->Taille = newT;
     }
-    // Si on arrive ici, A est non-nul ; garder Signe tel quel (+1 attendu)
+    // A est non-nul : forcer Signe = +1 (pour éviter des inconsistances)
+    A->Signe = +1;
 }
+
 
 // test si A == 0 (rapide)
 bool isZero(const BigBinary *A) {
-    if (A->Signe == 0) return true;
-    if (A->Taille == 0 || A->Tdigits == NULL) return true;
-    for (int i = 0; i < A->Taille; ++i) if (A->Tdigits[i] == 1) return false;
+    if (A == NULL) return true;
+    if (A->Tdigits == NULL || A->Taille == 0) return true;
+    // parcourir les digits pour détecter un '1'
+    for (int i = 0; i < A->Taille; ++i) {
+        if (A->Tdigits[i] == 1) return false;
+    }
+    // tous zéros
     return true;
 }
 

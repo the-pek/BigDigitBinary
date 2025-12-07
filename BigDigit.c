@@ -49,16 +49,16 @@ BigBinary creerBigBinaryDepuisChaine(const char *chaine) {
     nb.Tdigits = malloc(sizeof(int) * nb.Taille);
     nb.Signe = +1;
     int index = 0;
-    int tousZeros = 1;
 
     for (int i = 0; i < n; ++i) {
         if (chaine[i] == '0' || chaine[i] == '1') {
             nb.Tdigits[index] = chaine[i] - '0';
-            if (nb.Tdigits[index] == 1) tousZeros = 0;
             index++;
         }
     }
 
-    if (tousZeros) nb.Signe = 0;
+    // Normalisation obligatoire !
+    normalize(&nb);
+
     return nb;
 }

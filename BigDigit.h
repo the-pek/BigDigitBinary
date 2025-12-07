@@ -25,9 +25,8 @@ void afficheBigBinary(BigBinary nb);
 void libereBigBinary(BigBinary *nb);
 BigBinary Addition(BigBinary A, BigBinary B);
 BigBinary Soustraction(BigBinary A, BigBinary B);
-bool Inferieur(BigBinary A, BigBinary B);
-bool Egal(BigBinary A, BigBinary B);
-
+bool Inferieur(const BigBinary *A, const BigBinary *B);
+bool Egal(const BigBinary *A, const BigBinary *B);
 //Fonctions phase 2
 BigBinary copieBigBinary(const BigBinary *src);
 BigBinary shiftLeft(const BigBinary *A, int n);
@@ -37,8 +36,9 @@ void normalize(BigBinary *A);
 bool isZero(const BigBinary *A);
 bool isEven(const BigBinary *X);
 
-BigBinary multiplicationEgyptienne(BigBinary A, BigBinary B);
-BigBinary BigBinary_mod(BigBinary A, BigBinary B);
-BigBinary BigBinary_PGCD(BigBinary A, BigBinary B);
+// Nouveau prototype
+BigBinary BigBinary_PGCD(const BigBinary *A_in, const BigBinary *B_in);
+BigBinary multiplicationEgyptienne(const BigBinary *A, const BigBinary *B);
+BigBinary BigBinary_mod(const BigBinary *A, const BigBinary *B);
 
 #endif

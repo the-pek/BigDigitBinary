@@ -77,24 +77,24 @@ BigBinary Soustraction(BigBinary A, BigBinary B) {
 }
 
 //Comparaison
-bool Egal(BigBinary A, BigBinary B) {
-    if (A.Signe != B.Signe || A.Taille != B.Taille) return false;
-    for (int i = 0; i < A.Taille; i++) {
-        if (A.Tdigits[i] != B.Tdigits[i]) return false;
+bool Egal(const BigBinary *A, const BigBinary *B) {
+    if (A->Signe != B->Signe || A->Taille != B->Taille) return false;
+    for (int i = 0; i < A->Taille; i++) {
+        if (A->Tdigits[i] != B->Tdigits[i]) return false;
     }
     return true;
 }
 
-bool Inferieur(BigBinary A, BigBinary B) {
-    if (A.Signe < B.Signe) return true;
-    if (A.Signe > B.Signe) return false;
+bool Inferieur(const BigBinary *A, const BigBinary *B) {
+    if (A->Signe < B->Signe) return true;
+    if (A->Signe > B->Signe) return false;
 
-    if (A.Taille < B.Taille) return true;
-    if (A.Taille > B.Taille) return false;
+    if (A->Taille < B->Taille) return true;
+    if (A->Taille > B->Taille) return false;
 
-    for (int i = 0; i < A.Taille; i++) {
-        if (A.Tdigits[i] < B.Tdigits[i]) return true;
-        if (A.Tdigits[i] > B.Tdigits[i]) return false;
+    for (int i = 0; i < A->Taille; i++) {
+        if (A->Tdigits[i] < B->Tdigits[i]) return true;
+        if (A->Tdigits[i] > B->Tdigits[i]) return false;
     }
     return false; // égaux
 }

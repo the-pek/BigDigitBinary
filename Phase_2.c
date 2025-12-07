@@ -1,13 +1,23 @@
 #include "BigDigit.h"
 
-BigBinary BigBinary_PGCD(BigBinary A, BigBinary B) {
+BigBinary BigBinary_PGCD(const BigBinary *A_in, const BigBinary *B_in) {
+
+    BigBinary A = copieBigBinary(A_in);
+    BigBinary B = copieBigBinary(B_in);
+
     // Cas simples : renvoyer copies profondes
-    if (isZero(&A)) return copieBigBinary(&B);
-    if (isZero(&B)) return copieBigBinary(&A);
+    // B doit être libéré
+    if (isZero(&A)) {
+        libereBigBinary(&B); return A;
+    }
+    // A doit être libéré
+    if (isZero(&B)) {
+        libereBigBinary(&A); return B;
+    }
 
     int k = 0;
 
-    // 1) Extraire facteurs de 2 communs
+    // Extraire facteurs de 2 communs
     while (isEven(&A) && isEven(&B)) {
         BigBinary newA = shiftRight(&A, 1);
         BigBinary newB = shiftRight(&B, 1);
@@ -21,14 +31,14 @@ BigBinary BigBinary_PGCD(BigBinary A, BigBinary B) {
         k++;
     }
 
-    // 2) Rendre A impair
+    // Rendre A impair
     while (isEven(&A)) {
         BigBinary newA = shiftRight(&A, 1);
         libereBigBinary(&A);
         A = newA;
     }
 
-    // 3) Boucle principale
+    // Boucle principale
     while (!isZero(&B)) {
         // rendre B impair
         while (isEven(&B)) {
@@ -37,13 +47,10 @@ BigBinary BigBinary_PGCD(BigBinary A, BigBinary B) {
             B = newB;
         }
 
-        // s'assurer que A <= B, sinon swap A <-> B (avec copies profondes et libérations)
-        if (!Inferieur(A, B)) {
-            BigBinary tmpA = copieBigBinary(&A);
-            BigBinary tmpB = copieBigBinary(&B);
-            libereBigBinary(&A);
-            libereBigBinary(&B);
-            A = tmpB;
+        // s'assurer que A <= B
+        if (!Inferieur(&A, &B)) {
+            BigBinary tmpA = A; // Swap simple de structure (échange les pointeurs internes)
+            A = B;
             B = tmpA;
         }
 
@@ -53,7 +60,7 @@ BigBinary BigBinary_PGCD(BigBinary A, BigBinary B) {
         B = newB;
     }
 
-    // 4) Remultiplier A par 2^k
+    // Remultiplier A par 2^k
     while (k-- > 0) {
         BigBinary newA = shiftLeft(&A, 1);
         libereBigBinary(&A);
@@ -61,92 +68,85 @@ BigBinary BigBinary_PGCD(BigBinary A, BigBinary B) {
     }
 
     normalize(&A);
-    return A; // caller doit libérer la BigBinary retournée
+    libereBigBinary(&B);
+
+    return A;
 }
 
+BigBinary multiplicationEgyptienne(const BigBinary *A_in, const BigBinary *B_in) {
+    BigBinary Resultat = creerBigBinaryDepuisChaine("0");
 
-BigBinary BigBinary_mod(BigBinary A, BigBinary B) {
-    if (isZero(&B)) {
-        // modulo par 0 : non défini
-        // Par sécurité, retourner A tel quel ou gérer erreur
-        return A;
-    }
-    if (isZero(&A)) {
-        return creerBigBinaryDepuisChaine("0");
-    }
-    if (Inferieur(A, B)) {
-        return A; // A < B → A est déjà le reste
-    }
+    // Copies profondes modifiables pour les calculs internes
+    BigBinary a = copieBigBinary(A_in);
+    BigBinary b = copieBigBinary(B_in);
 
-    // Boucle principale : tant que A >= B
-    while (!Inferieur(A, B)) {
-
-        // temp = B (copie indépendante)
-        BigBinary temp = copieBigBinary(&B);
-
-        // Trouver le plus grand multiple 2^k * B <= A
-        // C’est-à-dire doubler temp tant qu’il reste <= A
-        while (1) {
-            BigBinary temp_shift = shiftLeft(&temp, 1); // B * 2
-
-            if (Inferieur(A, temp_shift)) {
-                // temp_shift > A → on garde temp comme dernier multiple valide
-                libereBigBinary(&temp_shift);
-                break;
-            }
-
-            // sinon, temp = temp_shift et on continue
-            libereBigBinary(&temp);
-            temp = temp_shift;
-        }
-
-        // A = A - temp
-        BigBinary newA = Soustraction(A, temp);
-        libereBigBinary(&A);
-        A = newA;
-
-        // nettoyage
-        libereBigBinary(&temp);
-
-        // Toujours normaliser après une opération qui peut créer des zéros de tête
-        normalize(&A);
-    }
-
-    return A;   // A est le reste (appelant doit libérer)
-}
-
-BigBinary multiplicationEgyptienne(BigBinary A, BigBinary B) {
-    // cas rapides
-    if (isZero(&A) || isZero(&B)) return creerBigBinaryDepuisChaine("0");
-
-    // résultat initial 0
-    BigBinary resultat = creerBigBinaryDepuisChaine("0");
-    // copies locales (on va les modifier)
-    BigBinary a = copieBigBinary(&A);
-    BigBinary b = copieBigBinary(&B);
-
-    // boucle principale : tant que b != 0
+    // Boucle tant que le multiplicateur (b) > 0
     while (!isZero(&b)) {
+
+        // Test du bit de poids faible (LSB) de b
         if (bitDeDroite(&b) == 1) {
-            BigBinary tmp = Addition(resultat, a);
-            libereBigBinary(&resultat);
-            resultat = tmp;
+            // Resultat = Resultat + a
+            BigBinary NouvelleSomme = Addition(Resultat, a);
+            libereBigBinary(&Resultat); // Libérer l'ancien Resultat
+            Resultat = NouvelleSomme;
         }
-        // a = a << 1
-        BigBinary tmpA = shiftLeft(&a, 1);
+
+        // a = a * 2 (shift left)
+        BigBinary tmpA = shiftLeft(&a, 1); // shiftLeft retourne un BigBinary alloué
         libereBigBinary(&a);
         a = tmpA;
 
-        // b = b >> 1
-        BigBinary tmpB = shiftRight(&b, 1);
+        // b = b / 2 (shift right)
+        BigBinary tmpB = shiftRight(&b, 1); // shiftRight retourne un BigBinary alloué
         libereBigBinary(&b);
         b = tmpB;
     }
 
-    // nettoyage des temporaires
     libereBigBinary(&a);
     libereBigBinary(&b);
 
-    normalize(&resultat);
-    return resultat; // caller doit libérer
+    return Resultat;
+}
+
+BigBinary BigBinary_mod(const BigBinary *A_in, const BigBinary *B_in) {
+
+    BigBinary Reste = copieBigBinary(A_in); // Reste (a) commence par A
+    BigBinary Diviseur = copieBigBinary(B_in); // Diviseur (b) est B
+
+    // Si A < B, alors A mod B = A
+    if (Inferieur(&Reste, &Diviseur)) {
+        libereBigBinary(&Diviseur);
+        return Reste;
+    }
+
+    // Tant que Reste >= Diviseur (B)
+    while (!Inferieur(&Reste, &Diviseur)) {
+
+        // Trouver la plus grande puissance de 2 de B, T = B * 2^k, telle que T <= Reste
+        BigBinary T = copieBigBinary(&Diviseur);
+        BigBinary T_shift = creerBigBinaryDepuisChaine("0");
+
+        // Boucle de recherche du k max: Tant que T * 2 <= Reste
+        while (1) {
+            T_shift = shiftLeft(&T, 1);
+
+            if (Inferieur(&Reste, &T_shift)) {
+                libereBigBinary(&T_shift);
+                break;
+            }
+
+            libereBigBinary(&T);
+            T = T_shift;
+        }
+
+        BigBinary NouveauReste = Soustraction(Reste, T);
+
+        libereBigBinary(&Reste);
+        libereBigBinary(&T);
+
+        Reste = NouveauReste;
+    }
+    libereBigBinary(&Diviseur);
+
+    return Reste;
 }

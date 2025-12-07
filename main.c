@@ -15,16 +15,17 @@ int main() {
     printf("Soustraction: A - B = "); afficheBigBinary(D);
 
     printf("Comparaison: ");
-    printf(" A == B ? %d\n", Egal(A,B));
-    printf("A < B ? %d\n", Inferieur(A,B));
+    printf(" A == B ? %d\n", Egal(&A,&B));
+    printf("A < B ? %d\n", Inferieur(&A,&B));
 
-    BigBinary P = BigBinary_PGCD(A,B);
+    BigBinary P = BigBinary_PGCD(&A,&B);
     printf("PGCD: P = "); afficheBigBinary(P);
 
-    BigBinary Me = multiplicationEgyptienne(A,B);
+    BigBinary Me = multiplicationEgyptienne(&A,&B);
     printf("Multiplication Egyptienne A * B = "); afficheBigBinary(Me);
 
-    BigBinary Mod = BigBinary_mod(A,B);
+    // CORRIGÉ : le Modulo utilise les pointeurs
+    BigBinary Mod = BigBinary_mod(&A,&B);
     printf("Modulo: A mod B = "); afficheBigBinary(Mod);
 
     libereBigBinary(&A);
