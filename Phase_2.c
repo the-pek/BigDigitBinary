@@ -73,41 +73,6 @@ BigBinary BigBinary_PGCD(const BigBinary *A_in, const BigBinary *B_in) {
     return A;
 }
 
-BigBinary multiplicationEgyptienne(const BigBinary *A_in, const BigBinary *B_in) {
-    BigBinary Resultat = creerBigBinaryDepuisChaine("0");
-
-    // Copies profondes modifiables pour les calculs internes
-    BigBinary a = copieBigBinary(A_in);
-    BigBinary b = copieBigBinary(B_in);
-
-    // Boucle tant que le multiplicateur (b) > 0
-    while (!isZero(&b)) {
-
-        // Test du bit de poids faible (LSB) de b
-        if (bitDeDroite(&b) == 1) {
-            // Resultat = Resultat + a
-            BigBinary NouvelleSomme = Addition(Resultat, a);
-            libereBigBinary(&Resultat); // Libérer l'ancien Resultat
-            Resultat = NouvelleSomme;
-        }
-
-        // a = a * 2 (shift left)
-        BigBinary tmpA = shiftLeft(&a, 1); // shiftLeft retourne un BigBinary alloué
-        libereBigBinary(&a);
-        a = tmpA;
-
-        // b = b / 2 (shift right)
-        BigBinary tmpB = shiftRight(&b, 1); // shiftRight retourne un BigBinary alloué
-        libereBigBinary(&b);
-        b = tmpB;
-    }
-
-    libereBigBinary(&a);
-    libereBigBinary(&b);
-
-    return Resultat;
-}
-
 BigBinary BigBinary_mod(const BigBinary *A_in, const BigBinary *B_in) {
 
     BigBinary Reste = copieBigBinary(A_in); // Reste (a) commence par A
@@ -147,6 +112,85 @@ BigBinary BigBinary_mod(const BigBinary *A_in, const BigBinary *B_in) {
         Reste = NouveauReste;
     }
     libereBigBinary(&Diviseur);
+
+    return Reste;
+}
+
+BigBinary multiplicationEgyptienne(const BigBinary *A_in, const BigBinary *B_in) {
+    BigBinary Resultat = creerBigBinaryDepuisChaine("0");
+
+    // Copies profondes modifiables pour les calculs internes
+    BigBinary a = copieBigBinary(A_in);
+    BigBinary b = copieBigBinary(B_in);
+
+    // Boucle tant que le multiplicateur (b) > 0
+    while (!isZero(&b)) {
+
+        // Test du bit de poids faible (LSB) de b
+        if (bitDeDroite(&b) == 1) {
+            // Resultat = Resultat + a
+            BigBinary NouvelleSomme = Addition(Resultat, a);
+            libereBigBinary(&Resultat); // Libérer l'ancien Resultat
+            Resultat = NouvelleSomme;
+        }
+
+        // a = a * 2 (shift left)
+        BigBinary tmpA = shiftLeft(&a, 1); // shiftLeft retourne un BigBinary alloué
+        libereBigBinary(&a);
+        a = tmpA;
+
+        // b = b / 2 (shift right)
+        BigBinary tmpB = shiftRight(&b, 1); // shiftRight retourne un BigBinary alloué
+        libereBigBinary(&b);
+        b = tmpB;
+    }
+
+    libereBigBinary(&a);
+    libereBigBinary(&b);
+
+    return Resultat;
+}
+
+BigBinary BigBinary_expMod(const BigBinary *M_in, unsigned int e, const BigBinary *N_in) {
+    // Reste (résultat final) = 1 (en BigBinary)
+    BigBinary Reste = creerBigBinaryDepuisChaine("1");
+
+    // Base courante (M) = M_in mod N_in (M = M mod N)
+    BigBinary Base_courante = BigBinary_mod(M_in, N_in);
+
+    // Le modulo N (Diviseur) est une copie
+    BigBinary N = copieBigBinary(N_in);
+
+    // Boucle d'Exponentiation Rapide
+    while (e > 0) {
+
+        // Si le bit de poids faible de 'e' est 1 (e est impair)
+        if (e & 1) {
+            // Calculer Reste * Base_courante (via multiplication Egyptienne)
+            BigBinary Produit = multiplicationEgyptienne(&Reste, &Base_courante);
+            libereBigBinary(&Reste);
+
+            // Appliquer le modulo N
+            Reste = BigBinary_mod(&Produit, &N);
+            libereBigBinary(&Produit);
+        }
+
+        // e = e / 2 (décalage à droite)
+        e >>= 1;
+
+        // Base_courante = (Base_courante * Base_courante) mod N
+
+        // Calcule Base_courante * Base_courante (via multiplication Egyptienne)
+        BigBinary Carre = multiplicationEgyptienne(&Base_courante, &Base_courante);
+        libereBigBinary(&Base_courante);
+
+        // Appliquer le modulo N
+        Base_courante = BigBinary_mod(&Carre, &N);
+        libereBigBinary(&Carre);
+    }
+
+    libereBigBinary(&Base_courante);
+    libereBigBinary(&N);
 
     return Reste;
 }

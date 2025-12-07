@@ -27,7 +27,8 @@ BigBinary Addition(BigBinary A, BigBinary B);
 BigBinary Soustraction(BigBinary A, BigBinary B);
 bool Inferieur(const BigBinary *A, const BigBinary *B);
 bool Egal(const BigBinary *A, const BigBinary *B);
-//Fonctions phase 2
+
+//Fonctions utilitaires
 BigBinary copieBigBinary(const BigBinary *src);
 BigBinary shiftLeft(const BigBinary *A, int n);
 BigBinary shiftRight(const BigBinary *A, int n);
@@ -36,9 +37,10 @@ void normalize(BigBinary *A);
 bool isZero(const BigBinary *A);
 bool isEven(const BigBinary *X);
 
-// Nouveau prototype
+// Fonctions phase 2
 BigBinary BigBinary_PGCD(const BigBinary *A_in, const BigBinary *B_in);
 BigBinary multiplicationEgyptienne(const BigBinary *A, const BigBinary *B);
 BigBinary BigBinary_mod(const BigBinary *A, const BigBinary *B);
+BigBinary BigBinary_expMod(const BigBinary *M_in, unsigned int e, const BigBinary *N_in);
 
 #endif

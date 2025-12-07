@@ -24,9 +24,12 @@ int main() {
     BigBinary Me = multiplicationEgyptienne(&A,&B);
     printf("Multiplication Egyptienne A * B = "); afficheBigBinary(Me);
 
-    // CORRIGÉ : le Modulo utilise les pointeurs
     BigBinary Mod = BigBinary_mod(&A,&B);
     printf("Modulo: A mod B = "); afficheBigBinary(Mod);
+
+    unsigned int e= 5;
+    BigBinary ExpMod = BigBinary_expMod(&A, e, &B);
+    printf("Exponentiation Modulaire: A^e mod B = "); afficheBigBinary(ExpMod);
 
     libereBigBinary(&A);
     libereBigBinary(&B);
@@ -35,6 +38,7 @@ int main() {
     libereBigBinary(&P);
     libereBigBinary(&Me);
     libereBigBinary(&Mod);
+    libereBigBinary(&ExpMod);
 
     return 0;
 }
