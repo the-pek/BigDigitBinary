@@ -28,6 +28,7 @@ int main() {
     printf("Modulo: A mod B = "); afficheBigBinary(Mod);
 
     unsigned int e= 5;
+    printf("e = %d \n", e);
     BigBinary ExpMod = BigBinary_expMod(&A, e, &B);
     printf("Exponentiation Modulaire: A^e mod B = "); afficheBigBinary(ExpMod);
 
