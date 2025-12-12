@@ -9,7 +9,7 @@ et l'Exponentiation Modulaire.
 
 ## Phase 1
 Cette première phase établit l'infrastructure nécessaire à la manipulation des grands nombres. L'objectif était de dépasser
-les limitations des types standards **int, long long** en créant une représentation binaire personnalisée et extensible
+les limitations des types standards en créant une représentation binaire personnalisée et extensible
 
 ### Structures de données
 > Pour stocker un entier de précision arbitraire, j'ai utilisé une structure basée sur un tableau dynamique, comme suggéré
@@ -21,18 +21,18 @@ qui facilite la lecture humaine et l'initialisation depuis des chaînes de carac
 > - Méta-données : La structure conserve la Taille (nombre de bits) et le Signe (+1/-1) pour gérer l'arithmétique signée.
 
 ### Gestion de la mémoire
-> La manipulation de tableaux dynamiques impose une gestion rigoureuse de la mémoire pour éviter les fuites (memory leaks).
+> La manipulation de tableaux dynamiques impose une gestion rigoureuse de la mémoire pour éviter les fuites.
 > - **Initialisation:** Allocation en fonction de la taille demandée
 > - **Libération:** Implémentation d'une fonction qui nettoie le tableau et remet les pointeurs à `null`
 
 ### Algorithme Arithmétique
 > - L'addition <br>
->  - Parcours des tableaux de la droite (LSB) vers la gauche (MSB) ; <br>
->  - Gestion d'une variable retenue (carry) propagée à chaque étape ; <br>
->  - Redimensionnement automatique si le résultat dépasse la taille des opérandes (overflow).
+>  - Parcours des tableaux de la droite `LSB` vers la gauche `MSB`
+>  - Gestion d'une variable retenue propagée à chaque étape
+>  - Redimensionnement automatique si le résultat dépasse la taille des opérandes
 > - La soustraction <br>
->  - Gère le cas A−B où A≥B ; <br>
->  - Utilise le concept d'emprunt (borrow) lorsque l'on soustrait un bit 1 à un bit 0 ; <br>
+>  - Gère le cas `A − B` où `A ≥ B`
+>  - Utilise le concept d'emprunt lorsque l'on soustrait un bit `1` à un bit `0`
 >  - Normalisation : Une étape critique a été ajoutée pour supprimer les zéros non significatifs en tête du résultat après
      la soustraction
 >- Les comparaisons 
@@ -53,10 +53,10 @@ Au lieu de l'algorithme d'Euclide classique qui nécessite des divisions, nous a
 >   - Si les deux sont impairs, on soustrait le plus petit au plus grand
 
 ### Modulo
-Le calcul du reste de la division (A(modB)) est essentiel pour RSA. Ne pouvant utiliser l'opérateur `%`, l'approche par
-Soustraction Optimisée a été inspirée de la méthode "Division-free mod" décrite dans le sujet.
-> - **Méthode:** Au lieu de soustraire B à A répétitivement (trop lent), l'algorithme cherche le plus grand multiple de 
-B par une puissance de 2 (B×2k) qui "rentre" dans le reste courant, et le soustrait.
+Ne pouvant utiliser l'opérateur `%`, l'approche par **soustraction optimisée** a été inspirée de la méthode `Division-free 
+mod` décrite dans le sujet.
+> - **Méthode:** Au lieu de soustraire `B` à `A` répétitivement, l'algorithme cherche le plus grand multiple de 
+B par une puissance de 2 qui rentre dans le reste courant, et le soustrait.
 > - **Résultat:** Cela revient à simuler une division euclidienne bit par bit, en utilisant uniquement des décalages 
 et des soustractions.
 
@@ -68,7 +68,5 @@ des additions et des décalages.
 résultat. À chaque étape, le multiplicande est doublé.
 
 ### Exponentiation Modulaire
-Le but final est de calculer Me(modN) pour le chiffrement. Calculer d'abord Me générerait un nombre gigantesque impossible
-à stocker en mémoire.
-> - **Optimisation de la mémoire:** La propriété (A×B)(modN)=((A(modN))×(B(modN)))(modN) est appliquée à chaque étape. 
-Cela garantit que les nombres manipulés restent toujours inférieurs à N, évitant ainsi tout dépassement de capacité 
+La finalité de cette phase est de calculer `A^e mod N`. Comme suggéré dans le sujet, l'algorithme d'exponentiation rapide classique
+a été réadapté pour qu'il fonctionne avec la structure de donnée.
