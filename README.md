@@ -14,11 +14,11 @@ les limitations des types standards en créant une représentation binaire perso
 ### Structures de données
 > Pour stocker un entier de précision arbitraire, j'ai utilisé une structure basée sur un tableau dynamique, comme suggéré
 dans le sujet. 
-> - Stockage Dynamique : Utilisation d'un pointeur int *Tdigits pour allouer uniquement la mémoire nécessaire selon la
+> - Stockage Dynamique : Utilisation d'un pointeur pour allouer uniquement la mémoire nécessaire selon la
 taille du nombre. 
-> - Convention de Stockage : Les bits sont stockés avec le poids fort en tête (Big Endian) (Tdigits[0] est le MSB), ce 
-qui facilite la lecture humaine et l'initialisation depuis des chaînes de caractères. 
-> - Méta-données : La structure conserve la Taille (nombre de bits) et le Signe (+1/-1) pour gérer l'arithmétique signée.
+> - Convention de Stockage : Les bits sont stockés avec le poids fort en tête, ce qui facilite la lecture humaine et
+l'initialisation depuis des chaînes de caractères. 
+> - Méta-données : La structure conserve la Taille et le Signe pour gérer l'arithmétique signée.
 
 ### Gestion de la mémoire
 > La manipulation de tableaux dynamiques impose une gestion rigoureuse de la mémoire pour éviter les fuites.
@@ -27,16 +27,16 @@ qui facilite la lecture humaine et l'initialisation depuis des chaînes de carac
 
 ### Algorithme Arithmétique
 > - L'addition <br>
->      - Parcours des tableaux de la droite `LSB` vers la gauche `MSB`
->      - Gestion d'une variable retenue propagée à chaque étape
->      - Redimensionnement automatique si le résultat dépasse la taille des opérandes
+>   - Parcours des tableaux de la droite `LSB` vers la gauche `MSB`
+>   - Gestion d'une variable retenue propagée à chaque étape 
+>   - Redimensionnement automatique si le résultat dépasse la taille des opérandes
 > - La soustraction <br>
->      - Gère le cas `A − B` où `A ≥ B`
->      - Utilise le concept d'emprunt lorsque l'on soustrait un bit `1` à un bit `0`
->      - Normalisation : Une étape critique a été ajoutée pour supprimer les zéros non significatifs en tête du résultat après
-         la soustraction
->- Les comparaisons 
->      - Comparaison d'abord sur le signe, puis la taille, et enfin bit par bit
+>   - Gère le cas `A − B` où `A ≥ B`
+>   - Utilise le concept d'emprunt lorsque l'on soustrait un bit `1` à un bit `0`
+>   - Normalisation : Une étape critique a été ajoutée pour supprimer les zéros non significatifs en tête du résultat après
+la soustraction
+>- Les comparaisons
+>  - Comparaison d'abord sur le signe, puis la taille, et enfin bit par bit
 
 ## Phase 2
 Cette phase constitue le cœur algorithmique du projet. L'objectif était d'implémenter les opérations **PGCD, Modulo, Exponentiation** 
