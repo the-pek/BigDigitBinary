@@ -68,5 +68,5 @@ des additions et des décalages.
 résultat. À chaque étape, le multiplicande est doublé.
 
 ### Exponentiation Modulaire
-La finalité de cette phase est de calculer `A^e mod N`. Comme suggéré dans le sujet, l'algorithme d'exponentiation rapide classique
-a été réadapté pour qu'il fonctionne avec la structure de donnée.
+La finalité de cette phase est de calculer `A^e mod N`. Comme suggéré dans le sujet, l'algorithme d'exponentiation rapide
+classique a été réadapté pour qu'il fonctionne avec la structure de donnée.
