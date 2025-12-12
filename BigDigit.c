@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define BASE 2
-
-typedef struct {
-    int *Tdigits;   // Tableau de bits (MSB → LSB)
-    int Taille;     // Nombre de bits significatifs
-    int Signe;      // +1 positif, -1 négatif, 0 nul
-} BigBinary;
+#include "BigDigit.h"
 
 // Crée un BigBinary de taille donnée (tous les bits à 0)
 BigBinary initBigBinary(int taille, int signe) {
@@ -59,16 +49,16 @@ BigBinary creerBigBinaryDepuisChaine(const char *chaine) {
     nb.Tdigits = malloc(sizeof(int) * nb.Taille);
     nb.Signe = +1;
     int index = 0;
-    int tousZeros = 1;
 
     for (int i = 0; i < n; ++i) {
         if (chaine[i] == '0' || chaine[i] == '1') {
             nb.Tdigits[index] = chaine[i] - '0';
-            if (nb.Tdigits[index] == 1) tousZeros = 0;
             index++;
         }
     }
 
-    if (tousZeros) nb.Signe = 0;
+    // Normalisation obligatoire !
+    normalize(&nb);
+
     return nb;
 }
